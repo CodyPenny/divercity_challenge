@@ -3,7 +3,8 @@ const { development } = require('./config');
 
 const sequelize = new Sequelize( development.database, development.username, development.password, {
   host: 'localhost',
-  dialect: 'postgres'
+  dialect: 'postgres',
+  logging: false
 });
 
 const connectDB = async () => {
