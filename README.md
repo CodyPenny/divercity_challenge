@@ -16,4 +16,8 @@
 
 2. Setup JWT token authentication
 
-3. Store photo in S3
+3. Setup validators
+
+4. Generate models and migration files
+
+5. Store photo in S3
