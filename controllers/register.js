@@ -7,7 +7,11 @@ const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    let user = await User.findOne({ where: { email } });
+    let user = await User.findOne({
+      where: {
+        email,
+      },
+    });
     if (user) {
       return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
     }
@@ -29,14 +33,14 @@ const registerUser = async (req, res) => {
     };
 
     jwt.sign(
-      payload, 
-      process.env.jwtToken, 
+      payload,
+      process.env.jwtToken,
       { expiresIn: 36000 },
-       (err, token) => {
+      (err, token) => {
         if (err) throw err;
         return res.json({ token });
-      });
-
+      }
+    );
   } catch (err) {
     console.log(err.message);
     res.status(500).send('Server error');

@@ -16,7 +16,7 @@ app.use('/api', router);
 
 (async () => {
   try {
-    await sequelize.sync({force: true});
+    await sequelize.sync();
     app.listen(PORT, () =>
       console.log(
         `Express server connected on port:${PORT} and Postgres synced.`
