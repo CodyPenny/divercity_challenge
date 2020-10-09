@@ -10,7 +10,8 @@
 
 1. Create the following routes:
 - POST api/register
-https://user-images.githubusercontent.com/53372490/95549672-8b452c00-09bc-11eb-863a-376eaff76743.png
+![image]
+(https://user-images.githubusercontent.com/53372490/95549672-8b452c00-09bc-11eb-863a-376eaff76743.png)
 
 - POST api/login
 https://user-images.githubusercontent.com/53372490/95549775-bb8cca80-09bc-11eb-94b8-1134bf997fdf.png
