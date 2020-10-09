@@ -3,18 +3,30 @@ const { development } = require('./config');
 
 const sequelize = new Sequelize( development.database, development.username, development.password, {
   host: 'localhost',
-  dialect: 'postgres',
-  logging: false
+  dialect: 'postgres'
 });
 
-const connectDB = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('Postgres connected');
-  } catch (err) {
-    console.error('Error connecting to Postgres: ', err);
-    process.exit(1);
+const models = {
+  User: require('../models/User'),
+  Post: require('../models/Post')
+};
+
+// loop through the models and pass in instance and datatype
+for (const modelName in models) {
+  models[modelName] = models[modelName](sequelize, Sequelize);
+}
+
+// loop through to associate - doing both loops at once will throw error since relations have not been fully defined
+for (const modelName in models){
+  if ('associate' in models[modelName]) {
+    models[modelName].associate(models);
   }
 };
 
-module.exports = connectDB;
+const { User, Post } = models;
+
+module.exports = {
+  User,
+  Post,
+  sequelize
+}
