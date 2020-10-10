@@ -1,28 +1,30 @@
 ## Coding Challenge
 
-### Req1:
-1. Create express.js app and use postgres sql as database.
-2. Make routes where user can register itself. Required fields of user are name, email and password.
-3. User can login with its email and password and gets a JWT token.
-4. Logged in users can create a post. Post has 3 attribues title, description and a photo.
+## Req 2:
+1. A post will have an attribute when it was created.
+2. Post returning api will calculate the time difference like 2s ago, 10d ago, 4w ago, 8m ago and 1yr ago.
+3. A post can have multiple photos but atmost 5.
+4. A post can be editied.
 
 ### Approach
 
 1. Create the following routes:
-- POST api/register
-  <img width="717" alt="api_register" src="https://user-images.githubusercontent.com/53372490/95550671-1d99ff80-09be-11eb-9f29-9295ab562d88.png">
+- 
+GET api/posts
+  <img width="851" alt="get_api_posts" src="https://user-images.githubusercontent.com/53372490/95653889-c58ff580-0ab0-11eb-9781-5e734f27d894.png">
 
-- POST api/login
-  <img width="718" alt="api_login" src="https://user-images.githubusercontent.com/53372490/95550553-f3e0d880-09bd-11eb-900b-4855971c98ba.png">
-
-- POST api/posts
-  <img width="961" alt="api_posts" src="https://user-images.githubusercontent.com/53372490/95643718-bdf72f00-0a65-11eb-9f51-46822adbd686.png">
+- PUT api/posts/body/:id
 
 
-2. Setup JWT token authentication
+2. Modify middleware methods to handle multiple image file uploads, max 5. If more than 5 images, it'll ignore the excess and handle the first 5.
 
-3. Setup route handlers and validators
+3. Generate new migration files to reflect changes in dataType.
 
-4. Generate models and migration files
+4. Sort posts by newest with time difference calculated on get all posts route
 
-5. Store image files in S3
+5. Store only the unique part of the s3 links in postgres
+
+6. Handle edit requests for body and file uploads
+
+7. Remove asset from S3
+

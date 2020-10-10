@@ -14,6 +14,11 @@ const fileFilter = (req, file, cb) => {
   const filetypes = /jpeg|jpg|png/;
   const mimetype = filetypes.test(file.mimetype);
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+  if (req.files.length > 5) {
+    req.files = req.files.slice(0, 5);
+  }
+
   if (mimetype && extname) {
     cb(null, true);
   } else {
@@ -35,26 +40,33 @@ const upload = multer({
     bucket: process.env.aws_bucket,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata: (req, file, cb) => {
-      cb(null, { fieldName: 'TESTING_METADATA' });
+      cb(null, { fieldName: 'fieldName' });
     },
     key: (req, file, cb) => {
-      req.body = {
-        url: '',
-      };
-
-      cb(null, 'files_from_node/' + Date.now().toString() + file.originalname);
+      const slug = Date.now().toString() + file.originalname;
+      req.slugs.push(slug);
+      cb(null, `files_from_node/${slug}`);
     },
   }),
 });
 
 const parseMultiform = (req, res, next) => {
-  const uploadFile = upload.single('image');
+  req.slugs = [];
+  const uploadFile = upload.any();
 
   uploadFile(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       return res
         .status(400)
-        .json({ errors: [{ msg: 'Error occurred when uploading' }] });
+        .json({
+          errors: [
+            {
+              msg: `Error occurred when uploading, ${
+                err instanceof multer.MulterError
+              }`,
+            },
+          ],
+        });
     } else if (err) {
       return res.status(400).json({ errors: [{ msg: `${err}` }] });
     }
@@ -65,3 +77,5 @@ const parseMultiform = (req, res, next) => {
 module.exports = {
   parseMultiform,
 };
+
+

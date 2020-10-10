@@ -8,7 +8,6 @@ exports.validatePost = [
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    req.body.url = req.file.location;
     next();
   },
 ];
