@@ -4,16 +4,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true,
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4
+      defaultValue: DataTypes.UUIDV4,
     },
     title: DataTypes.STRING,
     description: DataTypes.STRING,
-    photo: DataTypes.STRING
+    image: DataTypes.STRING,
   });
 
-  Post.associate = models => {
+  Post.associate = (models) => {
     Post.belongsTo(models.User, {
-      foreignKey: 'user_id'
+      foreignKey: 'user_id',
     });
   };
 

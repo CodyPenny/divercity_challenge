@@ -10,11 +10,10 @@
 
 1. Create the following routes:
 - POST api/register
-![image]
-(https://user-images.githubusercontent.com/53372490/95549672-8b452c00-09bc-11eb-863a-376eaff76743.png)
+  <img width="717" alt="api_register" src="https://user-images.githubusercontent.com/53372490/95550671-1d99ff80-09be-11eb-9f29-9295ab562d88.png">
 
 - POST api/login
-https://user-images.githubusercontent.com/53372490/95549775-bb8cca80-09bc-11eb-94b8-1134bf997fdf.png
+  <img width="718" alt="api_login" src="https://user-images.githubusercontent.com/53372490/95550553-f3e0d880-09bd-11eb-900b-4855971c98ba.png">
 
 - POST api/posts
 - GET api/posts
