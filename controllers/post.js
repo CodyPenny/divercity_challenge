@@ -1,27 +1,24 @@
 const { Post } = require('../db');
 const { User } = require('../db');
+const { s3delete } = require('../services/awsRemove');
+const { stripDomain } = require('../utils/stripDomain');
 
 const createPost = async (req, res) => {
   const { title, description } = req.body;
-
   const serialized = JSON.stringify(req.slugs);
-
   try {
     const user = await User.findOne({
       where: {
         id: req.user.id,
       },
     });
-
     const newPost = await Post.create({
       title,
       description,
       image: serialized,
     });
-
     newPost.setUser(user);
-
-    res.status(200).send('Posted');
+    return res.status(200).send('Posted');
   } catch (err) {
     return res.status(400).json({ errors: [{ msg: 'Server Error' }] });
   }
@@ -34,30 +31,70 @@ const getAllPosts = async (req, res) => {
       order: [['createdAt', 'DESC']],
       attributes: ['id', 'title', 'description', 'image', 'createdAt'],
     });
-
-    res.json(posts);
+    return res.json(posts);
   } catch (err) {
     return res.status(400).json({ errors: [{ msg: err.message }] });
   }
 };
 
 const editPost = async (req, res) => {
-  // is user the owner of the post
-  // change title
-  // edit description
+  try {
+    const post = await Post.findByPk(req.params.id);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+    if (post.user_id !== req.user.id) {
+      return res
+        .status(404)
+        .json({ msg: 'User not authorized to edit this post.' });
+    }
+    const { title, description } = req.body;
+    if (title) {
+      post.title = title;
+    }
+    if (description) {
+      post.description = description;
+    }
+    await post.save();
+    return res.json(post);
+  } catch (err) {
+    return res.status(400).json({ errors: [{ msg: err.message }] });
+  }
 };
 
-const editImagesPost = async (req,res) => {
-  // is user the owner of the post
-  // remove or add image?
-  // parse between two objects: image and remove
-  // add what's in the image file and remove what's in the remove object
-  
+const addImagesPost = async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+    if (post.user_id !== req.user.id) {
+      return res
+        .status(404)
+        .json({ msg: 'User not authorized to edit this post.' });
+    }
+    const sumImages = req.slugs.length + post.image.length;
+    if (sumImages > 5) {
+      await s3delete(req.slugs);
+      return res
+        .status(400)
+        .json({
+          msg: 'Max 5 images reached. Remove older images then try again',
+        });
+    }
+    const oldSlugs = stripDomain(post.image);
+    req.slugs.forEach((newSlug) => oldSlugs.unshift(newSlug));
+    post.image = JSON.stringify(oldSlugs);
+    await post.save();
+    res.status(200).json(post);
+  } catch (err) {
+    return res.status(400).json({ errors: [{ msg: err.message }] });
+  }
 };
 
 module.exports = {
   createPost,
   getAllPosts,
   editPost,
-  editImagesPost
+  addImagesPost,
 };

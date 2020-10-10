@@ -1,6 +1,6 @@
 const { check, validationResult } = require('express-validator');
 
-exports.validatePost = [
+exports.validateNewPost = [
   check('title', 'Title is required').trim().notEmpty(),
   check('description', 'Description is required').trim().notEmpty(),
   (req, res, next) => {

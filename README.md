@@ -9,11 +9,15 @@
 ### Approach
 
 1. Create the following routes:
-- 
-GET api/posts
+
+  GET api/posts
   <img width="851" alt="get_api_posts" src="https://user-images.githubusercontent.com/53372490/95653889-c58ff580-0ab0-11eb-9781-5e734f27d894.png">
 
-- PUT api/posts/body/:id
+  PUT api/posts/body/:id
+  <img width="819" alt="put_api_posts_body" src="https://user-images.githubusercontent.com/53372490/95664636-92745300-0afe-11eb-9ded-195af2e3bff2.png">
+
+  PUT api/posts/add/images/:id
+  <img width="843" alt="put_api_add_image" src="https://user-images.githubusercontent.com/53372490/95667191-6addb480-0b17-11eb-8efd-070b9a68628d.png">
 
 
 2. Modify middleware methods to handle multiple image file uploads, max 5. If more than 5 images, it'll ignore the excess and handle the first 5.
@@ -24,7 +28,10 @@ GET api/posts
 
 5. Store only the unique part of the s3 links in postgres
 
-6. Handle edit requests for body and file uploads
+6. Handle edit requests for body
 
-7. Remove asset from S3
+7. Handle edit requests for new file uploads
 
+8. Remove unwanted image files from S3
+
+9. Handle certain edge cases
