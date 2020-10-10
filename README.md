@@ -16,12 +16,13 @@
   <img width="718" alt="api_login" src="https://user-images.githubusercontent.com/53372490/95550553-f3e0d880-09bd-11eb-900b-4855971c98ba.png">
 
 - POST api/posts
-- GET api/posts
+  <img width="961" alt="api_posts" src="https://user-images.githubusercontent.com/53372490/95643718-bdf72f00-0a65-11eb-9f51-46822adbd686.png">
+
 
 2. Setup JWT token authentication
 
-3. Setup validators
+3. Setup route handlers and validators
 
 4. Generate models and migration files
 
-5. Store photo in S3
+5. Store image files in S3
