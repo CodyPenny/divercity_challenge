@@ -6,3 +6,4 @@ createDB.sql
 
 services/imageUpload.js
 
+requests.rest

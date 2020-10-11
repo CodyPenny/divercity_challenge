@@ -1,5 +1,4 @@
-const { Post } = require('../db');
-const { User } = require('../db');
+const { Post, User } = require('../db');
 const { s3delete } = require('../services/awsRemove');
 const { stripDomain } = require('../utils/stripDomain');
 

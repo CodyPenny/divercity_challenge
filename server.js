@@ -1,13 +1,14 @@
 const express = require('express');
 const { sequelize } = require('./db');
 const morgan = require('morgan');
-const router = require('./routes');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(morgan('dev'));
 app.use(express.json({ extended: false }));
-app.use('/api', router);
+app.use('/api/user', require('./routes/users'));
+app.use('/api/posts', require('./routes/posts'));
+app.use('/api/comments', require('./routes/comments'));
 
 (async () => {
   try {

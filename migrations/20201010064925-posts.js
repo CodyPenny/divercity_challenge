@@ -20,7 +20,7 @@ module.exports = {
     return Promise.all([
       queryInterface.changeColumn('posts', 'image'),
       queryInterface.changeColumn('posts', 'description'),
-      queryInterface.changeColumn('posts', 'id')
+      queryInterface.changeColumn('posts', 'id'),
     ]);
   },
 };

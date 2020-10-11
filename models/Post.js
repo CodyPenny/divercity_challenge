@@ -13,7 +13,10 @@ module.exports = (sequelize, DataTypes) => {
     image: {
       type: DataTypes.STRING,
       get() {
-        return JSON.parse(this.getDataValue('image')).map(slug => `https://divercity-bucket.s3.us-east-2.amazonaws.com/files_from_node/${slug}`)
+        return JSON.parse(this.getDataValue('image')).map(
+          (slug) =>
+            `https://divercity-bucket.s3.us-east-2.amazonaws.com/files_from_node/${slug}`
+        );
       },
     },
     createdAt: {
@@ -27,6 +30,9 @@ module.exports = (sequelize, DataTypes) => {
   Post.associate = (models) => {
     Post.belongsTo(models.User, {
       foreignKey: 'user_id',
+    });
+    Post.hasMany(models.Comment, {
+      foreignKey: 'post_id',
     });
   };
 

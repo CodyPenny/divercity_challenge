@@ -1,20 +1,13 @@
-'use strict';
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('posts', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('comments', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
       },
-      title: {
-        type: Sequelize.STRING,
-      },
-      description: {
-        type: Sequelize.STRING,
-      },
-      image: {
+      utterance: {
         type: Sequelize.STRING,
       },
       user_id: {
@@ -22,6 +15,14 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         references: {
           model: 'users',
+          key: 'id',
+        },
+      },
+      post_id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        references: {
+          model: 'posts',
           key: 'id',
         },
       },
@@ -35,7 +36,7 @@ module.exports = {
       },
     });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('posts');
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('comments');
   },
 };

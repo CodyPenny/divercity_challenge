@@ -1,8 +1,7 @@
 const { check, validationResult } = require('express-validator');
 
-exports.validateNewPost = [
-  check('title', 'Title is required').trim().notEmpty(),
-  check('description', 'Description is required').trim().notEmpty(),
+exports.validateComment = [
+  check('utterance', 'No comments have been entered').trim().notEmpty(),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
