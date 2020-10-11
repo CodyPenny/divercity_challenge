@@ -46,7 +46,7 @@ const editPost = async (req, res) => {
     if (post.user_id !== req.user.id) {
       return res
         .status(404)
-        .json({ msg: 'User not authorized to edit this post.' });
+        .json({ errors: [{ msg: 'User not authorized to edit this post.' }] });
     }
     const { title, description } = req.body;
     if (title) {
@@ -62,7 +62,7 @@ const editPost = async (req, res) => {
   }
 };
 
-const addImagesPost = async (req, res) => {
+const addImages = async (req, res) => {
   try {
     const post = await Post.findByPk(req.params.id);
     if (!post) {
@@ -71,16 +71,14 @@ const addImagesPost = async (req, res) => {
     if (post.user_id !== req.user.id) {
       return res
         .status(404)
-        .json({ msg: 'User not authorized to edit this post.' });
+        .json({ errors: [{ msg: 'User not authorized to edit this post.' }] });
     }
     const sumImages = req.slugs.length + post.image.length;
     if (sumImages > 5) {
       await s3delete(req.slugs);
-      return res
-        .status(400)
-        .json({
-          msg: 'Max 5 images reached. Remove older images then try again',
-        });
+      return res.status(400).json({
+        msg: 'Max 5 images reached. Remove older images then try again',
+      });
     }
     const oldSlugs = stripDomain(post.image);
     req.slugs.forEach((newSlug) => oldSlugs.unshift(newSlug));
@@ -92,9 +90,58 @@ const addImagesPost = async (req, res) => {
   }
 };
 
+const deleteImages = async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+    if (post.user_id !== req.user.id) {
+      return res
+        .status(404)
+        .json({ errors: [{ msg: 'User not authorized to edit this post.' }] });
+    }
+    const { image } = req.body;
+    const removeIndex = post.image.indexOf(image);
+    const oldSlugs = stripDomain(post.image);
+    oldSlugs.splice(removeIndex, 1);
+    post.image = JSON.stringify(oldSlugs);
+    await post.save();
+
+    const slug = stripDomain([image]);
+    await s3delete(slug);
+
+    res.status(200).json(post);
+  } catch (err) {
+    return res.status(400).json({ errors: [{ msg: err.message }] });
+  }
+};
+
+const deletePost = async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+    if (post.user_id !== req.user.id) {
+      return res
+        .status(404)
+        .json({
+          errors: [{ msg: 'User not authorized to delete this post.' }],
+        });
+    }
+    await post.destroy();
+    return res.status(200).send('Post deleted');
+  } catch (err) {
+    return res.status(400).json({ errors: [{ msg: err.message }] });
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   editPost,
-  addImagesPost,
+  addImages,
+  deleteImages,
+  deletePost,
 };

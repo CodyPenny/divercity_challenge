@@ -7,7 +7,6 @@ const PORT = process.env.PORT || 8080;
 
 app.use(morgan('dev'));
 app.use(express.json({ extended: false }));
-app.use(express.urlencoded());
 app.use('/api', router);
 
 (async () => {
