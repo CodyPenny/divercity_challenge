@@ -9,13 +9,13 @@
 ### Approach
 
 1. Create the following routes:
-- POST api/register
+  ### POST api/register
   <img width="717" alt="api_register" src="https://user-images.githubusercontent.com/53372490/95550671-1d99ff80-09be-11eb-9f29-9295ab562d88.png">
 
-- POST api/login
+  ### POST api/login
   <img width="718" alt="api_login" src="https://user-images.githubusercontent.com/53372490/95550553-f3e0d880-09bd-11eb-900b-4855971c98ba.png">
 
-- POST api/posts
+  ### POST api/posts
   <img width="961" alt="api_posts" src="https://user-images.githubusercontent.com/53372490/95643718-bdf72f00-0a65-11eb-9f51-46822adbd686.png">
 
 
