@@ -14,6 +14,7 @@ const {
   deleteImages,
   deletePost,
 } = require('../controllers/post');
+const paginate = require('../middleware/paginate');
 
 // @route  POST api/posts
 // @desc   Create a new post
@@ -21,9 +22,9 @@ const {
 router.post('/', auth, parseMultiform, validateNewPost, createPost);
 
 // @route  GET api/posts
-// @desc   Get all posts
+// @desc   Get all posts with pagination
 // @access Private
-router.get('/', auth, getAllPosts);
+router.get('/', auth, paginate, getAllPosts);
 
 // @route  Put api/posts/body/:id
 // @desc   Edit title or description of post

@@ -1,4 +1,5 @@
 const { Comment, User, Post } = require('../db');
+const { Op } = require('sequelize');
 
 const createComment = async (req, res) => {
   try {
@@ -28,6 +29,25 @@ const createComment = async (req, res) => {
   }
 };
 
+const getComments = async (req, res) => {
+  try {
+    const { offset, limit } = req.pagination;
+    const { id } = req.params;
+    const comments = await Comment.findAndCountAll({
+      where: {
+        post_id: id,
+      },
+      order: [['createdAt', 'ASC']],
+      offset,
+      limit,
+    });
+    return res.json(comments);
+  } catch (err) {
+    return res.status(400).json({ errors: [{ msg: err.message }] });
+  }
+};
+
 module.exports = {
   createComment,
+  getComments,
 };

@@ -1,6 +1,7 @@
-const { Post, User } = require('../db');
+const { Post, User, Comment } = require('../db');
 const { s3delete } = require('../services/awsRemove');
 const { stripDomain } = require('../utils/stripDomain');
+const sequelize = require('sequelize');
 
 const createPost = async (req, res) => {
   const { title, description } = req.body;
@@ -25,11 +26,28 @@ const createPost = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.findAll({
-      limit: 10,
-      order: [['createdAt', 'DESC']],
+    const { offset, limit } = req.pagination;
+    const posts = await Post.findAndCountAll({
+      include: [
+        {
+          model: Comment,
+          as: 'comments',
+          attributes: ['createdAt', 'utterance', 'user_id'],
+          order: [['createdAt', 'ASC']],
+        },
+      ],
       attributes: ['id', 'title', 'description', 'image', 'createdAt'],
+      order: [['createdAt', 'DESC']],
+      offset,
+      limit,
     });
+
+    const copyPost = JSON.parse(JSON.stringify(posts.rows));
+    for (const post of copyPost) {
+      post.comments = post.comments.length;
+    }
+    posts.rows = copyPost;
+
     return res.json(posts);
   } catch (err) {
     return res.status(400).json({ errors: [{ msg: err.message }] });
@@ -123,11 +141,9 @@ const deletePost = async (req, res) => {
       return res.status(404).json({ msg: 'Post not found' });
     }
     if (post.user_id !== req.user.id) {
-      return res
-        .status(404)
-        .json({
-          errors: [{ msg: 'User not authorized to delete this post.' }],
-        });
+      return res.status(404).json({
+        errors: [{ msg: 'User not authorized to delete this post.' }],
+      });
     }
     await post.destroy();
     return res.status(200).send('Post deleted');

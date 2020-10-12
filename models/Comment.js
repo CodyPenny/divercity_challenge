@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 module.exports = (sequelize, DataTypes) => {
   const Comment = sequelize.define('comment', {
     id: {
@@ -7,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
     },
     utterance: DataTypes.STRING,
+    createdAt: {
+      type: DataTypes.DATE,
+      get() {
+        return moment(this.getDataValue('createdAt')).fromNow();
+      },
+    },
   });
 
   Comment.associate = (models) => {
